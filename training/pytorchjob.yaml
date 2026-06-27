@@ -1,0 +1,40 @@
+apiVersion: kubeflow.org/v1
+kind: PyTorchJob
+metadata:
+  name: qwen-lora-train
+spec:
+  pytorchReplicaSpecs:
+    Master:
+      replicas: 1
+      restartPolicy: OnFailure
+      template:
+        spec:
+          containers:
+          - name: pytorch
+            image: qwen-lora:latest
+            imagePullPolicy: IfNotPresent
+            args:
+            - "--epochs=1"
+            - "--batch_size=4"
+            - "--output=/output"
+            resources:
+              limits:
+                nvidia.com/gpu: 1
+            volumeMounts:
+            - name: output
+              mountPath: /output
+            env:
+            - name: HF_ENDPOINT
+              value: "https://hf-mirror.com"
+            # --- NCCL/Network tuning for container networking experiments ---
+            - name: NCCL_SOCKET_IFNAME
+              value: "eth0"
+            - name: NCCL_DEBUG
+              value: "INFO"
+            - name: NCCL_IB_DISABLE
+              value: "1"
+          volumes:
+          - name: output
+            hostPath:
+              path: /root/train-output
+              type: DirectoryOrCreate

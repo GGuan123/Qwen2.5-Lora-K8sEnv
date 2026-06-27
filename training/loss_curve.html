@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<title>Qwen2.5-1.5B LoRA Training Loss</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #f8fafc; padding: 40px; }
+  .container { max-width: 900px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 30px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  h1 { font-size: 18px; color: #1e293b; margin: 0 0 8px 0; }
+  .meta { font-size: 13px; color: #64748b; margin-bottom: 24px; display: flex; gap: 20px; flex-wrap: wrap; }
+  .meta span { background: #f1f5f9; padding: 2px 8px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Qwen2.5-1.5B LoRA 训练损失曲线</h1>
+<div class="meta">
+  <span>数据集: alpaca (5000条)</span>
+  <span>方法: QLoRA 4-bit, r=16</span>
+  <span>GPU: V100 16GB</span>
+  <span>时间: 15分10秒</span>
+  <span>1 epoch / 313 steps</span>
+  <span>最终 loss: 1.423</span>
+</div>
+<canvas id="chart" height="320"></canvas>
+</div>
+<script>
+const ctx = document.getElementById('chart');
+new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: [10,20,30,40,50,60,70,110,120,130,210,220,230,240,250,260,270,280,290,300,310,313],
+    datasets: [{
+      label: 'Training Loss',
+      data: [1.571,1.436,1.423,1.417,1.427,1.385,1.456,1.416,1.365,1.361,1.38,1.421,1.446,1.464,1.402,1.393,1.379,1.421,1.38,1.431,1.404,1.423],
+      borderColor: '#2563eb',
+      backgroundColor: 'rgba(37,99,235,0.08)',
+      fill: true,
+      tension: 0.2,
+      pointRadius: 3,
+      pointBackgroundColor: '#2563eb',
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      legend: { display: false },
+      annotation: {
+        annotations: {
+          finalLine: {
+            type: 'line', yMin: 1.423, yMax: 1.423,
+            borderColor: '#dc2626', borderWidth: 1, borderDash: [6,4],
+            label: { content: 'Final 1.423', enabled: true, position: 'end' }
+          }
+        }
+      }
+    },
+    scales: {
+      x: { title: { display: true, text: 'Step' }, min: 0, max: 320 },
+      y: { title: { display: true, text: 'Loss' }, min: 1.30, max: 1.62 }
+    }
+  }
+});
+</script>
+</body>
+</html>

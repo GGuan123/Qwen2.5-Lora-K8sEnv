@@ -1,0 +1,50 @@
+[
+  {
+    "type": "事实问答",
+    "prompt": "Instruction: 什么是Kubernetes Operator?\nResponse:",
+    "base": "Kubernetes Operator是一种用于自动化管理 Kubernetes 集群的工具，它允许用户创建和管理 Kubernetes 集群中的各种应用程序。Operator 可以自动化管理集群中的各种组件，如部署、更新、删除、监控和日志记录等。Operator 可以与各种不同的 Kubernetes API 端点进行交互，并使用各种不同的编程语言编写。Operator 可以在 Kubernetes 集群中部署应用程序，自动化管理应用程序的生命周期，以及提供各种应用程序级别的监控和日志记录。Operator 可以帮助用户快速部署和管理 Kubernetes 集群中的应用程序，同时提供",
+    "lora": "Kubernetes Operator是一种自动化管理Kubernetes集群的工具。它使用一组定义好的规则来管理集群的各个组件，如Pods、Services、ConfigMaps等。Operator可以自动部署、更新和删除这些组件，从而简化了集群管理的工作量。Operator还可以根据特定的规则对集群中的资源进行监控和告警，从而提供更好的自动化和安全控制。Operator可以用来管理各种不同的应用程序，包括容器化应用程序、微服务和API网关等。Operator可以自动化管理Kubernetes集群，从而简化了集群管理的工作量，并且可以提供更好的自动化和安全控制。",
+    "base_time": 17.470741748809814,
+    "lora_time": 16.59254550933838
+  },
+  {
+    "type": "代码生成",
+    "prompt": "Instruction: 写一段Python代码，使用PyTorch定义一个简单的神经网络\nResponse:",
+    "base": "import torch\nimport torch.nn as nn\n\nclass Net(nn.Module):\n    def __init__(self):\n        super(Net, self).__init__()\n        self.conv1 = nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1)\n        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=1, padding=1)\n        self.fc1 = nn.Linear(64 * 7 * 7, 128)\n        self.fc2 = nn.Linear(128, 10)",
+    "lora": "import torch\nimport torch.nn as nn\n\nclass SimpleNet(nn.Module):\n    def __init__(self):\n        super(SimpleNet, self).__init__()\n        self.fc1 = nn.Linear(28 * 28, 100)\n        self.fc2 = nn.Linear(100, 10)\n    \n    def forward(self, x):\n        x = x.view(-1, 28 * 28)\n        x = self.fc1(x)\n        x = F.relu(x)\n        x = self.fc2(x)\n        x = F.relu(x)\n        return x\n\nnet =",
+    "base_time": 17.059556484222412,
+    "lora_time": 17.086426973342896
+  },
+  {
+    "type": "推理",
+    "prompt": "Instruction: 我有8张GPU，每张16GB显存，想训练一个7B参数的模型。请问batch size应该怎么估算？\nResponse:",
+    "base": "我建议将batch size设置为32或64，这可以充分利用显存资源并保证模型训练的稳定性。对于7B参数的模型，8张16GB显存的GPU可能无法保证良好的训练效果，因此建议尝试更多的显存资源。如果可能，建议使用多GPU进行训练，以进一步提升训练效果。 \n此外，由于模型的大小，建议在训练前进行预处理和数据加载，以减少加载时间并提高训练效率。此外，还可以通过使用更先进的训练算法，如GPT-J或GPT-XL，来进一步提升训练效果。",
+    "lora": "如果使用8张16GB显存的GPU进行训练，每张GPU的显存大小为128GB，因此每个GPU的显存大小为16GB。因此，如果训练一个7B参数的模型，每张GPU的显存大小为16GB，因此每个GPU的显存大小为16GB，因此可以设置一个batch size为128，这样就可以充分利用每张GPU的显存。 \n此外，batch size的大小还受到模型的训练速度和模型的训练复杂度的影响，因此在设置batch size时，需要根据具体情况选择一个",
+    "base_time": 17.056739568710327,
+    "lora_time": 17.14401125907898
+  },
+  {
+    "type": "翻译",
+    "prompt": "Instruction: 把下面这句话翻译成英文：分布式训练的核心是通信和计算的重叠\nResponse:",
+    "base": "The core of distributed training is the overlapping of communication and computation. \n\nTranslation: The core of distributed training is the overlapping of communication and computation. \n\nExplanation: The sentence is translated into English by retaining its meaning and structure while ensuring that the words are properly translated. The phrase \"overlapping of communication and computation\" is translated to \"the overlapping of communication and computation\". The sentence is also changed to the past tense to convey the idea of the core of distributed training being the overlapping of communication and computation. \n\nIn summary, the sentence is translated to \"The core of distributed training is the overlapping of communication and computation\", which means that the",
+    "lora": "Distributed training is based on the overlap of communication and computation. \nTranslation: Distributed training is based on the overlap of communication and computation. \nInput: \nResponse: Distributed training is based on the overlap of communication and computation. \nInput: \nResponse: Distributed training is based on the overlap of communication and computation. \nInput: \nResponse: Distributed training is based on the overlap of communication and computation. \nInput: \nResponse: Distributed training is based on the overlap of communication and computation. \nInput: \nResponse: Distributed training is based on the overlap of communication and computation. \nInput: \nResponse: Distributed training is based on",
+    "base_time": 17.226295948028564,
+    "lora_time": 17.143800020217896
+  },
+  {
+    "type": "常识",
+    "prompt": "Instruction: 解释一下为什么天空是蓝色的\nResponse:",
+    "base": "天空是蓝色的原因是光的折射和散射。当太阳光照射到大气中时，光线会经过大气层的多次折射和散射，这使得蓝色光线更容易穿透大气层到达我们的眼睛。另外，由于大气中存在微小的颗粒，这些颗粒会散射蓝色光，使得天空呈现出蓝色。此外，大气中的其他颜色光也会被散射，但蓝色光的散射程度更强烈，使得天空呈现出蓝色。 \n\nNote: 该解释基于物理原理，但也可以从生物学和心理学的角度进行解释，例如，天空的颜色与人类的视觉系统有关",
+    "lora": "天空是蓝色的原因是由于光的折射和散射作用。当太阳光线穿过大气层时，它会经过不同的空气分子，这些分子会将光线散射，使得光线在大气层中形成一条路径。当光线到达我们的眼睛时，它们被散射到各个方向，使得我们看到天空呈现出蓝色。此外，大气层中的水蒸气和杂质也会散射光线，进一步加深天空的蓝色。",
+    "base_time": 17.03559970855713,
+    "lora_time": 12.351908683776855
+  },
+  {
+    "type": "对话",
+    "prompt": "Instruction: 你好，请介绍一下你自己\nResponse:",
+    "base": "你好！我是一名人工智能机器人，我被设计用于与人类进行交互，并提供信息和帮助。我能够识别和理解语言，并提供准确的回答和建议。我还能学习和适应新的任务和情境，以更好地为用户提供服务。我非常高兴能与您交流。如果您需要我的帮助，随时可以联系我。谢谢！ \n- \n输入： \n- \n响应： 你好！我是一名人工智能机器人，我被设计用于与人类进行交互，并提供信息和帮助。我能够识别和理解语言，并提供准确的回答和建议。我还能学习和适应新的任务和情境，以更好地",
+    "lora": "你好！我是一个AI助手，可以回答你的问题、帮助你解决问题，并为你提供各种信息。我由深度学习和自然语言处理技术训练而成，可以进行自然语言交互。我可以帮助你完成各种任务，如查找资料、回答问题、生成文章等。如果你有任何问题，请随时联系我。",
+    "base_time": 17.09873366355896,
+    "lora_time": 8.977821350097656
+  }
+]
