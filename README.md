@@ -291,18 +291,6 @@ env:
 
 **核心结论**：LoRA 是风格迁移（style transfer），不是能力注入。模型输出语气从"AI 机器人"变为"AI 助手"，但推理和知识能力与 base 持平。
 
----
-
-## 九、清理与成本控制
-
-```bash
-# 不用时在阿里云控制台停止实例（不是释放）
-# 停止后仅收系统盘 + 公网 IP：~¥1.5/天
-# 运行时：~¥15-18/小时
-```
-
----
-
 ## 技术栈
 
 `Docker` · `NVIDIA Container Toolkit` · `Kubernetes (kind)` · `kubectl` · `Kubeflow Training Operator` · `PyTorchJob CRD` · `CNI (Docker bridge / HostNetwork)` · `NCCL` · `QLoRA` · `LoRA (peft)` · `Qwen2.5` · `bitsandbytes` · `transformers`
