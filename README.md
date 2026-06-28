@@ -190,9 +190,8 @@ kubectl logs -f job/qwen-lora-train
 │       │   └── worker Pod → 容器（train.py --rank=2）← 占 V100 #2 ✅
 │       │   ...
 │       └── kubelet  ← 负责管理上面这些容器
-
+```
 瓶颈：
-
 | 规模 | 能跑吗 | 实际场景 |
 |---|---|---|
 | 1 master + 1 worker（2 卡） | ✅ | 你的 V100 单机就该这么写 |
@@ -201,7 +200,6 @@ kubectl logs -f job/qwen-lora-train
 | 1 master + 255 worker（256 卡） | ✅ | 32 台 8 卡，需要 InfiniBand |
 | 1024 卡+ | ⚠️ | 能跑，但通信占比显著上升，需要 topology-aware scheduling |
 
-```
 
 ### 4.3 监控训练
 
