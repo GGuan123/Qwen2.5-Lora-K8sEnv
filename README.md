@@ -144,7 +144,6 @@ kubectl get crd | grep pytorch
 ## 三、构建训练镜像
 
 ```bash
-cd training
 docker build -t qwen-lora:latest .
 ```
 
@@ -193,6 +192,7 @@ kubectl logs -f job/qwen-lora-train
 │       └── kubelet  ← 负责管理上面这些容器
 
 瓶颈：
+
 | 规模 | 能跑吗 | 实际场景 |
 |---|---|---|
 | 1 master + 1 worker（2 卡） | ✅ | 你的 V100 单机就该这么写 |
