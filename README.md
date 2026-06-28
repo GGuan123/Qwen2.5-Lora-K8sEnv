@@ -198,23 +198,23 @@ kubectl logs -f job/qwen-lora-train
 | 1 master + 7 worker（8 卡） | ✅ | 单机 8 卡 DGX，最常用 |
 | 1 master + 31 worker（32 卡） | ✅ | 4 台 8 卡 DGX，跨机 NCCL |
 | 1 master + 255 worker（256 卡） | ✅ | 32 台 8 卡，需要 InfiniBand |
-| 1024 卡+ | ⚠️ | 能跑，但通信占比显著上升，需要 topology-aware scheduling |
+| 1024 卡+ | ⚠️ | 能跑，但通信占比显著上升，需要拓扑感知调度 |
 
 
 ### 4.3 监控训练
 
 ```bash
 # GPU 使用
-watch -n 1 nvidia-smi
+watch -n 1 nvidia-smi # GPU硬件状态
 
 # 训练日志
-kubectl logs -f <pod-name>
+kubectl logs -f <pod-name> # 监控训练代码的loss, step
 ```
 
 ---
 
 ## 五、训练结果
-
+模型在alpaca数据集微调，生成自回归的next-token-prediction
 | 指标 | 值 |
 |---|---|
 | 基座模型 | Qwen/Qwen2.5-1.5B |
@@ -320,7 +320,3 @@ env:
 | 对话 | 偏正式 | 自然流畅 | LoRA 略好 |
 
 **核心结论**：LoRA 是风格迁移（style transfer），不是能力注入。模型输出语气从"AI 机器人"变为"AI 助手"，但推理和知识能力与 base 持平。
-
-## 技术栈
-
-`Docker` · `NVIDIA Container Toolkit` · `Kubernetes (kind)` · `kubectl` · `Kubeflow Training Operator` · `PyTorchJob CRD` · `CNI (Docker bridge / HostNetwork)` · `NCCL` · `QLoRA` · `LoRA (peft)` · `Qwen2.5` · `bitsandbytes` · `transformers`
