@@ -57,10 +57,10 @@ apt update
 apt install -y cuda-toolkit-12-8 nvidia-container-toolkit
 ```
 
-### 1.3 配置 Docker GPU Runtime
+### 1.3 配置 NVIDIA Container Toolkit（容器运行时）
 
 ```bash
-nvidia-ctk runtime configure --runtime=docker
+nvidia-ctk runtime configure --runtime=docker # 把GPU的设备和驱动库挂载到容器里
 systemctl restart docker
 ```
 
@@ -100,7 +100,7 @@ systemctl restart docker
 ### 2.1 安装 kubectl
 
 ```bash
-snap install kubectl --classic
+snap install kubectl --classic # K8S集群的指令行控制
 kubectl version --client
 ```
 
@@ -121,21 +121,21 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
-  extraMounts:
+  extraMounts: # 宿主机的GPU设备和驱动库挂载给这个节点
   - hostPath: /dev
     containerPath: /dev
   - hostPath: /usr/local/nvidia
     containerPath: /usr/local/nvidia
 EOF
 
-kind create cluster --config kind-config.yaml --wait 5m
-kubectl get nodes
+kind create cluster --config kind-config.yaml --wait 5m # 基于配置文件启动一个kind-control-plane容器，内部初始化k8s控制面
+kubectl get nodes # 列出集群所有节点的状态，control-plane=master节点， none=worker节点
 ```
 
 ### 2.4 安装 Training Operator（PyTorchJob CRD）
 
 ```bash
-kubectl apply -k 'github.com/kubeflow/training-operator.git/manifests/overlays/standalone?ref=v1.8.1'
+kubectl apply -k 'github.com/kubeflow/training-operator.git/manifests/overlays/standalone?ref=v1.8.1' # 让K8S知道pytorchJob这个自定义资源
 kubectl get crd | grep pytorch
 ```
 
@@ -166,9 +166,41 @@ docker run --rm --gpus all \
 ### 4.2 K8s PyTorchJob（生产模式）
 
 ```bash
-kubectl apply -f pytorchjob.yaml
+kubectl apply -f pytorchjob.yaml # 提交分布式训练任务，并存入etcd(分布式训练配置)
+    1. pod被k8s-Scheduler绑定给空闲的GPU节点
+    2. GPU节点的kubelet各自拉镜像(并行)，镜像拉完后启动容器
+    3. rank0(master)端口监听worker节点，广播nccl的节点给所有worker节点，所有节点建立nccl-communication, 开始all-reduce，开始训练
+
 kubectl get pytorchjobs
 kubectl logs -f job/qwen-lora-train
+
+总统架构：
+通信：NVLink Bridge(600GB/s)
+服务器（宿主机）
+│
+├── Docker
+│   └── kind-control-plane 容器
+│       │
+│       ├── containerd  ← 容器运行时（不是 Docker）
+│       │   │
+│       │   ├── kube-apiserver 容器
+│       │   ├── etcd 容器
+│       │   ├── Training Operator 容器
+│       │   ├── master Pod → 容器（train.py --rank=0）← 占 V100 #0 ✅
+│       │   ├── worker Pod → 容器（train.py --rank=1）← 占 V100 #1 ✅
+│       │   └── worker Pod → 容器（train.py --rank=2）← 占 V100 #2 ✅
+│       │   ...
+│       └── kubelet  ← 负责管理上面这些容器
+
+瓶颈：
+| 规模 | 能跑吗 | 实际场景 |
+|---|---|---|
+| 1 master + 1 worker（2 卡） | ✅ | 你的 V100 单机就该这么写 |
+| 1 master + 7 worker（8 卡） | ✅ | 单机 8 卡 DGX，最常用 |
+| 1 master + 31 worker（32 卡） | ✅ | 4 台 8 卡 DGX，跨机 NCCL |
+| 1 master + 255 worker（256 卡） | ✅ | 32 台 8 卡，需要 InfiniBand |
+| 1024 卡+ | ⚠️ | 能跑，但通信占比显著上升，需要 topology-aware scheduling |
+
 ```
 
 ### 4.3 监控训练
